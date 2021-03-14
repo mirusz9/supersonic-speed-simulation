@@ -1,16 +1,16 @@
 const width = 1200;
 const height = 500;
-const soundSpeed = 2;
-let dotSpeed = 0.5;
-const dotAcceleration = 0.001;
+const soundSpeed = 3;
+const dotSpeed = 0;
+let dotAcceleration = 0;
 
-const dot = {
+let dot = {
 	x: 10,
 	y: height / 2,
-	v: 1,
+	v: dotSpeed,
 };
 
-const soundWaves = [];
+let soundWaves = [];
 
 class soundWave {
 	constructor(x) {
@@ -34,11 +34,8 @@ function setup() {
 let i = 0;
 function draw() {
 	background(100);
-	fill('#06f');
-	noStroke();
-	arc(dot.x, dot.y, 10, 10, 0, TWO_PI);
 
-	if (i % 10 == 0) {
+	if (i % 5 == 0) {
 		soundWaves.push(new soundWave(dot.x));
 	}
 
@@ -54,11 +51,29 @@ function draw() {
 		);
 		arc(soundWave.x, soundWave.y, soundWave.r, soundWave.r, 0, TWO_PI);
 	}
-	dotSpeed += dotAcceleration;
-	dot.x += dotSpeed;
+
+	fill('#06f');
+	noStroke();
+	arc(dot.x, dot.y, 10, 10, 0, TWO_PI);
+
+	dot.v += dotAcceleration;
+	dot.x += dot.v;
 	i++;
 }
 
-function mousePressed() {
+const startingSpeedButton = document.getElementById('startingSpeed');
+const accelerationButton = document.getElementById('acceleration');
+document.getElementById('restart').addEventListener('click', () => {
+	soundWaves = [];
+	dot = {
+		x: 10,
+		y: height / 2,
+		v: +startingSpeedButton.value / 100,
+	};
+	dotAcceleration = +accelerationButton.value / 100;
+	loop();
+});
+
+document.getElementById('stop').addEventListener('click', () => {
 	noLoop();
-}
+});
